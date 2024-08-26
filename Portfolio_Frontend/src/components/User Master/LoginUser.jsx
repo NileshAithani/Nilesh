@@ -42,7 +42,7 @@ const LoginUser = () => {
   };
 
   return (
-    <div className="w-full m-20">
+
       <div className="flex justify-center items-center p-12 ">
         <div className="w-3/12 p-2 m-2 flex flex-col gap-8">
           <div className="flex flex-col gap-2 ">
@@ -120,7 +120,7 @@ const LoginUser = () => {
           </form>
         </div>
       </div>
-    </div>
+
   );
 };
 
