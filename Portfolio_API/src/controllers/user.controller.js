@@ -3,12 +3,15 @@ import { User } from "../models/user.model.js";
 import { apiResponseHandler } from "../utils/apiResponseHandler.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendMail } from "../utils/sendmail.js";
+import { jwtGenerator } from "../utils/Generator/jwtGenerator.js";
 
 const registerUser = async (req, res) => {
   try {
     //get user data from frontend
     const { username, email, password } = req.body;
 
+    console.log(req.body);
     //validation non-empty
     if ([username, email, password].some((field) => field?.trim === "")) {
       const payload = apiResponseHandler("Failed", "All field are required");
@@ -27,7 +30,7 @@ const registerUser = async (req, res) => {
     });
 
     if (existedUser) {
-      const payload = apiResponseHandler(
+      const payload = await apiResponseHandler(
         "Failed",
         "Username or email is already exists"
       );
@@ -41,7 +44,10 @@ const registerUser = async (req, res) => {
     const avatarLocalPath = req.files?.avatar[0].path;
 
     if (!avatarLocalPath) {
-      const payload = apiResponseHandler("Failed", "Avatar File is required");
+      const payload = await apiResponseHandler(
+        "Failed",
+        "Avatar File is required"
+      );
       return res.status(400).json({
         data: payload,
       });
@@ -68,7 +74,7 @@ const registerUser = async (req, res) => {
 
     //check the user Creation
     if (!createUser) {
-      const payload = apiResponseHandler(
+      const payload = await apiResponseHandler(
         "Failed",
         "Somthing went wrong, While registering the user"
       );
@@ -83,12 +89,30 @@ const registerUser = async (req, res) => {
       "User registered Successfully",
       createUser
     );
+
+    //sent mail using node mail
+    const emailId = createUser.email;
+    const subject =
+      "Welcome to Team Nilesh! Your Registration Was Successful 🎉";
+    const templateName = "samplemailtemplate";
+    const templateData = {
+      username: createUser.username,
+    };
+
+    console.log("Data=====>", emailId, subject, templateName, templateData);
+    const mailData = await sendMail(
+      emailId,
+      subject,
+      templateName,
+      templateData
+    );
+
     return res.status(200).json({
       data: payload,
     });
   } catch (error) {
     console.error("Error registering user:", error);
-    const payload = apiResponseHandler(
+    const payload = await apiResponseHandler(
       "Failed",
       "An error occurred during registration."
     );
@@ -101,18 +125,18 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      const payload = apiResponseHandler("Failed", "Fields are required");
+      const payload = await apiResponseHandler("Failed", "Fields are required");
       return res.status(400).json({
         data: payload,
       });
     }
 
-    const existingUser = User.findOne({ email });
+    const existingUser = await User.findOne({ email });
 
-    console.log("existngUser", existingUser);
+    // console.log("existngUser", existingUser);
 
     if (!existingUser) {
-      const payload = apiResponseHandler("Failed", "User not exist");
+      const payload = await apiResponseHandler("Failed", "User not exist");
 
       return res.status(404).json({
         data: payload,
@@ -120,7 +144,7 @@ const loginUser = async (req, res) => {
     }
 
     // verify the password
-    const isPasswordValid = await bcrypt.cpmpare(
+    const isPasswordValid = await bcrypt.compare(
       password,
       existingUser.password
     );
@@ -133,17 +157,15 @@ const loginUser = async (req, res) => {
     }
 
     //Generate JWT Token
-    const options = {
-      id: existingUser._id,
-      email: existingUser.email,
-    };
-    const token = jwt.sign(options, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = await jwtGenerator(existingUser);
+
+    // const token = jwt.sign(options, process.env.JWT_SECRET, {
+    //   expiresIn: "1d",
+    // });
 
     //set token in an HTTP-only cookie
     res.cookie("token", token, {
-      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+      httpOnly: false, // Prevents client-side JavaScript from accessing the cookie
       secure: process.env.NODE_ENV === "production", // Ensures the cookie is sent only over HTTPS in production
       sameSite: "strict", // Prevents the cookie from being sent in cross-site requests
       maxAge: 3600000, // Cookie expiry in milliseconds (1 hour in this case)

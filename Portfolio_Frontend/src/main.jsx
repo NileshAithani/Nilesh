@@ -1,42 +1,69 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
+  Routes,
 } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import "./index.css";
 
-import Layout from "./Layout";
-import About from "./components/About";
-import HomeDashboard from "./components/HomeDashboard";
+import Layout from "./Layout/Layout";
+import PrivateLayout from "./Layout/PrivateLayout";
+import Error from "./pages/error.jsx";
+
+// Lazy loading components to improve performance
+const About = lazy(() => import("./pages/About"));
+// const RegisterUser = lazy(() =>
+//   import("./components/User Master/RegisterUser")
+// );
+const LoginUser = lazy(() => import("./components/User Master/LoginUser"));
+const Experience = lazy(() => import("./pages/Experience"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Intro = lazy(() => import("./pages/Intro"));
+
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 import RegisterUser from "./components/User Master/RegisterUser";
-import LoginUser from "./components/User Master/LoginUser";
-import Experience from "./components/Experience";
-import Projects from "./components/Projects";
-import Intro from "./components/Intro";
+import Dashboard from "./pages/Dashboard";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route path="/" element={<Intro />} />
-      <Route path="/home" element={<Intro />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/experience" element={<Experience />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/register" element={<RegisterUser />} />
-      <Route path="/login" element={<LoginUser />} />
-    </Route>
+    <>
+      {" "}
+      {/* Public Routes */}
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Intro />} />
+        <Route path="home" element={<Intro />} />
+        <Route path="about" element={<About />} />
+        <Route path="experience" element={<Experience />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="login" element={<LoginUser />} />
+        <Route path="register" element={<RegisterUser />} />
+      </Route>
+      {/* Private Routes */}
+      <Route element={<PrivateLayout />}>
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+      </Route>
+      {/* Error Handling */}
+      <Route path="*" element={<Error />} />
+    </>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    <ToastContainer />
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId="405109047558-chmou5iqslienihkj07fpvvea1o8612i.apps.googleusercontent.com">
+        <Suspense fallback={<div>Loading...</div>}>
+          <RouterProvider router={router} />
+        </Suspense>
+        <ToastContainer />
+      </GoogleOAuthProvider>
+    </Provider>
   </React.StrictMode>
 );

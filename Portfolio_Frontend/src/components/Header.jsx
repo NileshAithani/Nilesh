@@ -1,62 +1,63 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll"; // Importing from react-scroll
 
 const Header = () => {
   return (
-    <nav className="flex justify-evenly w-full p-3 text-lg shadow-lg  bg-[#020c1b] text-white">
+    <nav className=" fixed z-10 flex justify-evenly w-full p-3 text-lg shadow-lg  bg-[#020c1b] text-white">
       <div>
-        <Link to={"/home"} aria-label="Home">
+        <ScrollLink to="home" smooth={true} duration={500} aria-label="Home">
           <div className="font-mullish font-bold text-2xl">Nilesh Aithani</div>
-        </Link>
+        </ScrollLink>
       </div>
 
       {/* Navigation Items */}
       <ul className="flex justify-between items-center gap-9 font-mullish font-bold transition-all duration-200 ">
         <li>
-          <Link
-            to={"/home"}
+          <ScrollLink
+            to="home"
             className="text-white hover:text-green-300"
+            smooth={true}
+            duration={500}
             aria-label="Home"
           >
             Home
-          </Link>
+          </ScrollLink>
         </li>
         <li>
-          <Link
-            to={"/about"}
+          <ScrollLink
+            to="about"
             className="text-white hover:text-green-300"
+            smooth={true}
+            duration={500}
             aria-label="About"
           >
             About
-          </Link>
+          </ScrollLink>
         </li>
         <li>
-          <Link
-            to={"/experience"}
+          <ScrollLink
+            to="experience"
             className="text-white hover:text-green-300"
-            aria-label="Contact Us"
+            smooth={true}
+            duration={500}
+            aria-label="Experience"
           >
             Experience
-          </Link>
+          </ScrollLink>
         </li>
         <li>
-          <Link
-            to={"/projects"}
+          <ScrollLink
+            to="projects"
             className="text-white hover:text-green-300"
-            aria-label="Contact Us"
+            smooth={true}
+            duration={500}
+            aria-label="Projects"
           >
             Projects
-          </Link>
+          </ScrollLink>
         </li>
       </ul>
-
-      {/* Uncomment if needed */}
-      <div className="flex justify-between items-center gap-9 font-mullish font-bold transition-all duration-200 ">
-        <Link to={"/register"} className="text-white hover:text-green-300">
-          Sign Up
-        </Link>
-      </div>
 
       <div className="flex gap-3 justify-center items-center text-xl">
         <a

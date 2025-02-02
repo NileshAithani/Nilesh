@@ -1,18 +1,17 @@
-import React from "react";
 import my from "../assets/Logo/Nilesh.jpeg";
 import resume from "../assets/Logo/Nilesh_Resume.pdf";
 
 const About = () => {
   const oneDesc = (
-    <p className="text-slate-400 text-lg md:text-xl font-ntr">
+    <p className="text-slate-400 text-md md:text-lg ">
       I am currently a Software Development Engineer at MSL Tech, working in the
       Website Development and Robotic Process Automation.
     </p>
   );
 
   const twoDesc = (
-    <p className="text-slate-400 text-lg md:text-xl font-ntr mt-4">
-      Outside of work, I'm interested in following the developments of science.
+    <p className="text-slate-400 text-md md:text-lg mt-4">
+      Outside of work, I am interested in following the developments of science.
       I also play a lot of video games and make short videos.
     </p>
   );
@@ -24,10 +23,12 @@ const About = () => {
     "Node.js",
     "SQL",
     "Power Automate",
+    "AWS",
+    "DynamoDB",
   ];
 
   return (
-    <div className="w-full min-h-screen pt-6 md:pt-2 md:px-10 bg-[#020c1b] ">
+    <div className="w-full  pt-6 md:pt-2 md:px-10 bg-[#020c1b] ">
       <div className="flex justify-center items-center pt-32">
         <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
           <div className="flex-1  text-slate-400 text-base md:text-lg px-4 md:px-0 max-w-2xl">
