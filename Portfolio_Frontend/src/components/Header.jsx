@@ -1,13 +1,16 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { Link as ScrollLink } from "react-scroll"; // Importing from react-scroll
+import logonileshaithani from "../assets/Logo/logo-nilesh-aithani.png"
 
 const Header = () => {
   return (
     <nav className=" fixed z-10 flex justify-evenly w-full p-3 text-lg shadow-lg  bg-[#020c1b] text-white">
       <div>
         <ScrollLink to="home" smooth={true} duration={500} aria-label="Home">
-          <div className="font-mullish font-bold text-2xl">Nilesh Aithani</div>
+          <div className="font-mullish font-bold text-2xl">
+          <img src={logonileshaithani} />
+           </div>
         </ScrollLink>
       </div>
 
