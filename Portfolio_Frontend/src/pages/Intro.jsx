@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { IoMdMail } from "react-icons/io";
 
-
 const descriptions = ["Full Stack", "RPA"];
 
 const Intro = () => {
@@ -21,23 +20,16 @@ const Intro = () => {
   }, []);
 
   return (
-    <section className="flex flex-col items-center space-y-6 p-8 mx-auto bg-[#020c1b] ">
-   
-      <header className="text-center text-6xl text-white pt-32">
+    <section className="flex flex-col items-center space-y-6 pt-72 pl-48 pr-48 pb-20 bg-[#020c1b] ">
+      <header className="text-center text-8xl font-ntr text-white pt-32">
         hi, <span className="text-green-400 font-bold">nilesh</span> here.
       </header>
 
-      <p
-        className="text-4xl text-white text-center"
-        style={{ fontFamily: "NTR, sans-serif" }}
-      >
+      <p className="text-4xl text-gray-400 text-center font-ntr">
         I’m a <span className="font-bold">{description} Developer</span>
       </p>
 
-      <p
-        className="text-xl text-gray-300 text-center max-w-3xl mx-auto leading-relaxed text-start "
-        style={{ fontFamily: "NTR, sans-serif" }}
-      >
+      <p className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed text-start font-ntr ">
         I'm a software engineer from Delhi, India. I'm fascinated by
         large-scale, high-impact products and have contributed to major feature
         launches in industry-leading services also specialize in RPA (Robotic
@@ -50,8 +42,8 @@ const Intro = () => {
         className="flex items-center text-blue-400 hover:text-blue-600 transition-colors duration-300 border p-4 rounded-md"
         aria-label="Send an email to Nilesh"
       >
-        <IoMdMail className="mr-2 text-4xl" />
-        <span className="text-3xl font-bold ">Say hi!</span>
+        <IoMdMail className="mr-2 text-2xl" />
+        <span className="text-2xl font-bold font-ntr">Say hi!</span>
       </a>
     </section>
   );

@@ -8,19 +8,20 @@ import Footer from "@/pages/Footer";
 const Layout = () => {
   return (
     <>
-      <Header />
-
-      <div id="home">
-        <Intro />
+      <div className="bg-[#020c1b] ">
+        {" "}
+        <Header />
+        <div id="home">
+          <Intro />
+        </div>
+        <div id="about">
+          <About />
+        </div>
+        <div id="experience">
+          <Experience />
+        </div>
+        <Footer />
       </div>
-      <div id="about">
-        <About />
-      </div>
-      <div id="experience">
-        <Experience />
-      </div>
-
-      <Footer />
     </>
   );
 };

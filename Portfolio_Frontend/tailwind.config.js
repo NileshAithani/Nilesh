@@ -3,7 +3,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        ntr: ['"NTR"', "sans-serif"],
+        ntr: ["NTR", "sans-serif"],
       },
     },
   },
