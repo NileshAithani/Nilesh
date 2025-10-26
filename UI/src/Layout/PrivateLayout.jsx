@@ -1,6 +1,6 @@
-import Sidebar from "@/pages/Sidebar";
 import { Outlet, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import Sidebar from "@/pages/Sidebar";
 
 const PrivateLayout = () => {
   const token = Cookies.get("token"); // Retrieve the token from cookies

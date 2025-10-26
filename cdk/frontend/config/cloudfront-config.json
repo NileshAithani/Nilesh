@@ -1,0 +1,29 @@
+{
+  "bucketDetails": [
+    {
+      "bucketName": "react",
+      "isCloudfrontRequired": true,
+      "hasDefaultRoot": true,
+      "allowedOrigins": ["*"],
+      "defaultRootObject": "index.html"
+    },
+    {
+      "bucketName": "static",
+      "isCloudfrontRequired": true,
+      "hasDefaultRoot": false,
+      "allowedOrigins": ["*"],
+      "defaultRootObject": null
+    },
+    {
+      "bucketName": "document-bucket",
+      "isCloudfrontRequired": false,
+      "hasDefaultRoot": false,
+      "allowedOrigins": ["*"],
+      "defaultRootObject": null
+    }
+  ],
+  "versioned": true,
+  "removalPolicy": "RETAIN",
+  "autoDeleteObjects": false,
+  "publiceReadAccess": false
+}

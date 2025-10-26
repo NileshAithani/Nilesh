@@ -1,0 +1,130 @@
+name: Deploy AWS CDK and React App
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      # Set AWS Credentials & Environment Variables
+      - name: Set AWS Credentials and Environment Variables
+        run: |
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+            echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
+            echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID}}" >> $GITHUB_ENV
+            echo "STATIC_S3_BUCKET=${{ secrets.STATIC_S3_BUCKET_DEV }}" >> $GITHUB_ENV
+            echo "REACT_BUILD_S3_BUCKET=${{ secrets.REACT_BUILD_S3_BUCKET_DEV }}" >> $GITHUB_ENV
+            echo "REACT_CLOUDFRONT_ID=${{secrets.REACT_CLOUDFRONT_ID_DEV}}" >> $GITHUB_ENV
+            echo "STATIC_CLOUDFRONT_ID=${{secrets.STATIC_CLOUDFRONT_ID_DEV}}" >> $GITHUB_ENV
+          fi
+
+      # Configure AWS credentials dynamically
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      #   #Remove CDK Context Cache
+      # - name: Remove CDK Context Cache
+      #   working-directory: cdk/backend
+      #   run: rm -f cdk.context.json
+
+      # # Install Backend CDK Dependencies
+      # - name: Install Backend CDK Dependencies
+      #   working-directory: cdk/backend
+      #   run: npm install
+
+      # # Install Backend Layers Dependencies
+      # - name: Install Layers Dependencies
+      #   working-directory: cdk/backend/layers/modules_layer/nodejs
+      #   run: npm install
+
+      # # Bootstrap CDK Environment
+      # - name: Bootstrap CDK Environment
+      #   working-directory: cdk/backend
+      #   run: |
+      #     npx cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_REGION
+
+      # # Deploy Backend CDK
+      # - name: Deploy Backend CDK
+      #   working-directory: cdk/backend
+      #   run: npm run ${{ github.ref_name }}
+
+      #-------------------------------------------- Frontend-------------------------------------------
+
+      #Remove Frontend CDK Context Cache
+      - name: Remove Frontend CDK Context Cache
+        working-directory: cdk/frontend
+        run: rm -f cdk.context.json
+
+      # Install Frontend CDK Dependencies
+      - name: Install Frontend CDK Dependencies
+        working-directory: cdk/frontend
+        run: npm install
+
+      # Deploy Frontend CDK
+      - name: Deploy Frontend CDK
+        working-directory: cdk/frontend
+        run: npm run ${{ github.ref_name }}
+
+        # Fetch CloudFront Distribution ID from CDK Outputs
+      - name: Get CloudFront Distribution ID
+        run: |
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            REACT_CLOUDFRONT_ID=$(aws cloudformation describe-stacks --stack-name ${{ secrets.CLOUDFRONT_STACK_NAME_DEV }} \
+              --query "Stacks[0].Outputs[?OutputKey=='ReactCloudFrontDistributionId'].OutputValue" \
+              --output text)
+            STATIC_CLOUDFRONT_ID=$(aws cloudformation describe-stacks --stack-name ${{ secrets.CLOUDFRONT_STACK_NAME_DEV}} \
+              --query "Stacks[0].Outputs[?OutputKey=='StaticCloudFrontDistributionId'].OutputValue" \
+              --output text)
+
+            echo "REACT_CLOUDFRONT_ID=$REACT_CLOUDFRONT_ID" >> $GITHUB_ENV
+            echo "STATIC_CLOUDFRONT_ID=$STATIC_CLOUDFRONT_ID" >> $GITHUB_ENV
+          fi
+
+      # Install React App Dependencies
+      - name: Install React App Dependencies
+        working-directory: UI
+        run: npm install
+
+      # Build React App
+      - name: Build React App
+        working-directory: UI
+        run: npm run build:${{ github.ref_name }}
+
+      # Upload assets folder to static S3 bucket
+      - name: Upload Assets to Static Bucket
+        run: aws s3 sync UI/dist/assets s3://${{ env.STATIC_S3_BUCKET }}/assets --delete
+
+      # Upload index.html to React build S3 bucket
+      - name: Upload index.html to React Build Bucket
+        run: aws s3 cp UI/dist/index.html s3://${{ env.REACT_BUILD_S3_BUCKET }}/index.html --cache-control "no-cache"
+
+      # Invalidate CloudFront React Cache
+      - name: Invalidate CloudFront React Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.REACT_CLOUDFRONT_ID }} --paths "/*"
+
+      # Invalidate CloudFront Static Cache
+      - name: Invalidate CloudFront Static Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.STATIC_CLOUDFRONT_ID }} --paths "/*"

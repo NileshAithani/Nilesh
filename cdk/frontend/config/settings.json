@@ -1,0 +1,8 @@
+{
+  "dev": {
+      "region": "ap-south-1",
+      "account": "526681946776",
+      "stage": "dev",
+      "prefix": "nilesh-aithani-"
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "lambda": "product-collection",
+    "routes": [
+      {
+        "path": "/product-collection",
+        "method": "GET",
+        "queryStringParameters": []
+      }
+    ],
+    "runtime": "NODEJS_22_X",
+    "handler": "index.handler"
+  }
+]

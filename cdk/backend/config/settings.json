@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "region": "ap-south-1",
+    "account": "526681946776",
+    "stage": "dev",
+    "prefix": "dripcart-",
+    "document_bucket_name":"dripcart-document-bucket",
+    "secret_key":"dripcart-app-secret"
+  }
+}
