@@ -16,20 +16,16 @@ const Intro = () => {
     };
 
     updateDescription();
-
     const intervalId = setInterval(updateDescription, 2000);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  // Animation variants for staggered effect
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.2, // Delay between each child animation
-      },
+      transition: { staggerChildren: 0.2 },
     },
   };
 
@@ -44,28 +40,31 @@ const Intro = () => {
 
   return (
     <motion.section
-      className="flex flex-col items-center space-y-6 pt-72 pl-48 pr-48 pb-24 bg-[#020c1b]"
+      ref={ref}
+      className="flex flex-col items-center justify-center text-center bg-[#020c1b] px-6 sm:px-12 md:px-24 lg:px-48 pt-32 md:pt-60 pb-24 space-y-8"
       variants={containerVariants}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
-      ref={ref}
     >
-      <motion.header
-        className="text-center text-8xl font-ntr text-white pt-32"
+      {/* Greeting */}
+      <motion.h1
+        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-ntr text-white font-semibold"
         variants={childVariants}
       >
         hi, <span className="text-green-400 font-bold">nilesh</span> here.
-      </motion.header>
+      </motion.h1>
 
+      {/* Dynamic Title */}
       <motion.p
-        className="text-4xl text-gray-400 text-center font-ntr"
+        className="text-2xl sm:text-3xl md:text-4xl text-gray-400 font-ntr"
         variants={childVariants}
       >
-        I’m a <span className="font-bold">{description} Developer</span>
+        I’m a <span className="font-bold text-green-400">{description} Developer</span>
       </motion.p>
 
+      {/* Bio / Description */}
       <motion.p
-        className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed text-start font-ntr"
+        className="text-base sm:text-lg md:text-xl text-gray-400 font-ntr leading-relaxed text-center md:text-justify max-w-5xl"
         variants={childVariants}
       >
         I'm a software engineer based in Delhi, India, passionate about building
@@ -78,14 +77,15 @@ const Intro = () => {
         like the web and Excel.
       </motion.p>
 
+      {/* Contact Button */}
       <motion.a
         href="mailto:nileshaithani007@gmail.com"
-        className="flex items-center text-green-400 hover:text-green-600 transition-colors duration-300 border p-4 rounded-md"
         aria-label="Send an email to Nilesh"
         variants={childVariants}
+        className="flex items-center justify-center gap-2 mt-4 border-2 border-green-400 text-green-400 hover:bg-green-400 hover:text-[#020c1b] transition-all duration-300 px-6 py-3 rounded-xl text-lg sm:text-xl font-ntr font-bold"
       >
-        <IoMdMail className="mr-2 text-2xl" />
-        <span className="text-2xl font-bold font-ntr">Say hi!</span>
+        <IoMdMail className="text-2xl" />
+        <span>Say hi!</span>
       </motion.a>
     </motion.section>
   );
