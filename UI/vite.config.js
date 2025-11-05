@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    base: env.VITE_APP_STATIC_BASE_URL || "./",
+    base: env.VITE_APP_STATIC_BASE_URL || "/",
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
