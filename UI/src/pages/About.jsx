@@ -32,20 +32,14 @@ const About = () => {
   );
 
   const techStack = [
-    "JavaScript (ES6+)",
+    "Javascript ES6+",
     "React.js",
     "Node.js",
     "Java",
     "SQL",
     "MongoDB",
+    "AWS",
     "Power Automate",
-    "AWS Lambda",
-    "API Gateway",
-    "AWS Cognito",
-    "S3",
-    "Step Functions",
-    "CloudWatch",
-    "CloudFormation",
   ];
 
   // Animation variants for the tech stack list
@@ -130,7 +124,10 @@ const About = () => {
               animate={
                 isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }
               }
-              whileHover={{ scale: 1.05, transition: { duration: 0.3, ease: "easeInOut" } }}
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.3, ease: "easeInOut" },
+              }}
               transition={{ duration: 0.5, delay: 0.3 }}
             />
           </div>
